@@ -25,14 +25,14 @@ syn case match
 " Textile syntax: <http://textism.com/tools/textile/>
 
 " Inline elements.
-syn match txtEmphasis    /_[^_]\+_/
-syn match txtBold        /\*[^*]\+\*/
-syn match txtCite        /??.\+??/
-syn match txtDeleted     /-[^-]\+-/
-syn match txtInserted    /+[^+]\++/
-syn match txtSuper       /\^[^^]\+\^/
-syn match txtSub         /\~[^~]\+\~/
-syn match txtSpan        /%[^%]\+%/
+syn match txtEmphasis    /\(^\|[[:space:]*\-+^~(]\)\zs_[^_]\+_\ze\([[:space:]*\-+^~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtBold        /\(^\|[[:space:]_\-+^~(]\)\zs\*[^*]\+\*\ze\([[:space:]_\-+^~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtCite        /\(^\|[[:space:]_*\-+^~(]\)\zs??.\+??\ze\([[:space:]_*\-+^~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtDeleted     /\(^\|[[:space:]_*+^~(]\)\zs-[^-]\+-\ze\([[:space:]_*+^~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtInserted    /\(^\|[[:space:]_*\-^~(]\)\zs+[^+]\++\ze\([[:space:]_*\-^~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtSuper       /\(^\|[[:space:]_*\-+~(]\)\zs\^[^^]\+\^\ze\([[:space:]_*\-+~.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtSub         /\(^\|[[:space:]_*\-+^(]\)\zs\~[^~]\+\~\ze\([[:space:]_*\-+^.,:;/<()[\]{}!?"'#&]\|$\)/
+syn match txtSpan        /\(^\|[[:space:]_*\-+^~(]\)\zs%[^%]\+%\ze\([[:space:]_*\-+^~.,:;/<()[\]{}!?"'#&]\|$\)/
 syn match txtFootnoteRef /\[[0-9]\+]/
 syn match txtCode        /@[^@]\+@/
 
@@ -78,8 +78,16 @@ if version >= 508 || !exists("did_txt_syn_inits")
     HiLink txtListNumber2 Constant
     HiLink txtLink String
     HiLink txtCode Identifier
-    hi def txtEmphasis term=underline cterm=underline gui=italic
+    HiLink txtCite Keyword
+    HiLink txtSuper Special
+    HiLink txtSub Special
+    HiLink txtSpan String
+    HiLink txtFootnoteRef Tag
+    HiLink txtFootnoteDef Tag
+    hi def txtEmphasis term=underline,italic cterm=underline,italic gui=italic
     hi def txtBold term=bold cterm=bold gui=bold
+    hi def txtDeleted term=strikethrough cterm=strikethrough gui=strikethrough
+    hi def txtInserted term=underline cterm=underline gui=underline
 
     delcommand HiLink
 endif
